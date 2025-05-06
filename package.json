@@ -1,0 +1,33 @@
+{
+  "name": "node-farm-crm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moshlaycreatives/Node-Farm-CRM.git"
+  },
+  "keywords": [],
+  "author": "Hassan Murtaza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moshlaycreatives/Node-Farm-CRM/issues"
+  },
+  "homepage": "https://github.com/moshlaycreatives/Node-Farm-CRM#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.1",
+    "morgan": "^1.10.0"
+  }
+}
