@@ -50,5 +50,4 @@ app.use("/api/v1", router);
 // ============================================
 app.use(routeNotFound);
 app.use(errorHandler);
-
 export { app };

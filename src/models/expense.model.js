@@ -1,0 +1,84 @@
+import { Schema, model } from "mongoose";
+
+// Expense counter schema
+const expenseCounterSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    counter: {
+      type: Number,
+      default: 5000,
+    },
+  },
+  { timestamps: true }
+);
+
+const ExpenseCounter = model("ExpenseCounter", expenseCounterSchema);
+
+// Expense schema
+const expenseSchema = new Schema(
+  {
+    expenseId: {
+      type: Number,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
+    paidBy: {
+      type: String,
+      enum: ["Shyamal", "Patel"],
+      required: [true, "PaidBy is required."],
+    },
+
+    expenseType: {
+      type: String,
+      required: [true, "Expense type is required."],
+      trim: true,
+    },
+
+    amount: {
+      type: Number,
+      required: [true, "Amount is required."],
+    },
+
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+
+    image: {
+      type: String,
+      default: "",
+    },
+  },
+  { timestamps: true }
+);
+
+// Auto-increment expenseId
+expenseSchema.pre("validate", async function (next) {
+  if (this.isNew) {
+    try {
+      let counter = await ExpenseCounter.findOne({ name: "expenseId" });
+      if (!counter) {
+        counter = await ExpenseCounter.create({ name: "expenseId" });
+      }
+
+      const updatedCounter = await ExpenseCounter.findOneAndUpdate(
+        { name: "expenseId" },
+        { $inc: { counter: 1 } },
+        { new: true }
+      );
+
+      this.expenseId = updatedCounter.counter;
+    } catch (error) {
+      return next(error);
+    }
+  }
+  next();
+});
+
+export const Expense = model("Expense", expenseSchema);

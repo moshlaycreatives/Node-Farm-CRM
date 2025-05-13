@@ -1,12 +1,7 @@
 import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.util.js";
 import { ApiResponce } from "../utils/apiResponce.util.js";
-import {
-  BadRequestException,
-  NotFoundException,
-  UnAuthorizedException,
-  UnProcessableException,
-} from "../errors/index.js";
+import { NotFoundException, UnAuthorizedException } from "../errors/index.js";
 
 // ==============================================
 // 2. Login
