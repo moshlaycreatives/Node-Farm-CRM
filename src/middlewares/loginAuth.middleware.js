@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import {
@@ -5,6 +6,8 @@ import {
   NotFoundException,
   UnAuthorizedException,
 } from "../errors/index.js";
+
+dotenv.config();
 
 // ================================================
 // * Middleware : Login Auth

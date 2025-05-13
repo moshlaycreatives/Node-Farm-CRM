@@ -41,7 +41,7 @@ const staffSchema = new Schema(
 
     gender: {
       type: String,
-      enum: ["male", "female"],
+      enum: ["Male", "Fxemale"],
       required: true,
     },
 
