@@ -21,14 +21,7 @@ export const addCustomer = asyncHandler(async (req, res) => {
 // 2. Get All Customers (With Pagination)
 // ===========================================
 export const getAllCustomers = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const [customers, total] = await Promise.all([
-    Customer.find({}).skip(skip).limit(limit),
-    Customer.countDocuments(),
-  ]);
+  const customers = await Customer.find({});
 
   return res.status(200).json(
     new ApiResponce({
@@ -37,14 +30,7 @@ export const getAllCustomers = asyncHandler(async (req, res) => {
         customers.length > 0
           ? "Customer collection fetched successfully."
           : "Customer collection is empty.",
-      data: {
-        customers,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: customers,
     })
   );
 });
@@ -117,9 +103,6 @@ export const deleteCustomerById = asyncHandler(async (req, res) => {
 // ====================================================
 export const searchCustomer = asyncHandler(async (req, res) => {
   const { query } = req.query;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
 
   if (!query || query.trim() === "") {
     return res.status(400).json(
@@ -145,10 +128,7 @@ export const searchCustomer = asyncHandler(async (req, res) => {
     ],
   };
 
-  const [results, total] = await Promise.all([
-    Customer.find(searchConditions).skip(skip).limit(limit),
-    Customer.countDocuments(searchConditions),
-  ]);
+  const results = await Customer.find(searchConditions);
 
   return res.status(200).json(
     new ApiResponce({
@@ -157,14 +137,7 @@ export const searchCustomer = asyncHandler(async (req, res) => {
         results.length > 0
           ? "Customer search results fetched successfully."
           : "No matching customer found.",
-      data: {
-        customers: results,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: results,
     })
   );
 });

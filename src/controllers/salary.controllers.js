@@ -21,14 +21,7 @@ export const addSalary = asyncHandler(async (req, res) => {
 // 2. Get All Salaries (Paginated)
 // ===========================================
 export const getAllSalaries = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const [salaries, total] = await Promise.all([
-    Salary.find({}).skip(skip).limit(limit),
-    Salary.countDocuments(),
-  ]);
+  const salaries = await Salary.find({});
 
   return res.status(200).json(
     new ApiResponce({
@@ -37,14 +30,7 @@ export const getAllSalaries = asyncHandler(async (req, res) => {
         salaries.length > 0
           ? "Salary records fetched successfully."
           : "Salary collection is empty.",
-      data: {
-        salaries,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: salaries,
     })
   );
 });
@@ -117,9 +103,6 @@ export const deleteSalaryById = asyncHandler(async (req, res) => {
 // ===========================================
 export const searchSalary = asyncHandler(async (req, res) => {
   const { query } = req.query;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
 
   if (!query || query.trim() === "") {
     return res.status(400).json(
@@ -144,10 +127,7 @@ export const searchSalary = asyncHandler(async (req, res) => {
     ],
   };
 
-  const [results, total] = await Promise.all([
-    Salary.find(searchConditions).skip(skip).limit(limit),
-    Salary.countDocuments(searchConditions),
-  ]);
+  const results = await Salary.find(searchConditions);
 
   return res.status(200).json(
     new ApiResponce({
@@ -156,14 +136,7 @@ export const searchSalary = asyncHandler(async (req, res) => {
         results.length > 0
           ? "Salary search results fetched successfully."
           : "No matching salary record found.",
-      data: {
-        salaries: results,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: results,
     })
   );
 });

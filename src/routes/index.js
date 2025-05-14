@@ -5,6 +5,7 @@ import { loginAuth } from "../middlewares/index.js";
 import { expenseRouter } from "./expense.routes.js";
 import { salaryRouter } from "./salary.routes.js";
 import { customerRouter } from "./customer.routes.js";
+import { productRouter } from "./product.routes.js";
 
 const router = Router();
 
@@ -32,5 +33,10 @@ router.use("/salary", loginAuth, salaryRouter);
 // 5. Salary Routes
 // ==============================================
 router.use("/customer", loginAuth, customerRouter);
+
+// ==============================================
+// 6. Product Routes
+// ==============================================
+router.use("/product", loginAuth, productRouter);
 
 export { router };

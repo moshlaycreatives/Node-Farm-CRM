@@ -21,14 +21,7 @@ export const addStaff = asyncHandler(async (req, res) => {
 // 2. Get All Staff (With Pagination)
 // ===========================================
 export const getAllStaff = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const [staffList, total] = await Promise.all([
-    Staff.find({}).skip(skip).limit(limit),
-    Staff.countDocuments(),
-  ]);
+  const staffList = await Staff.find({});
 
   return res.status(200).json(
     new ApiResponce({
@@ -37,14 +30,7 @@ export const getAllStaff = asyncHandler(async (req, res) => {
         staffList.length > 0
           ? "Staff collection feteched successfully."
           : "Staff collection is empty.",
-      data: {
-        staff: staffList,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: staffList,
     })
   );
 });
@@ -117,9 +103,6 @@ export const deleteStaffMemberById = asyncHandler(async (req, res) => {
 // ===================================================
 export const searchStaff = asyncHandler(async (req, res) => {
   const { query } = req.query;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
 
   if (!query || query.trim() === "") {
     return res.status(400).json(
@@ -143,10 +126,7 @@ export const searchStaff = asyncHandler(async (req, res) => {
     ],
   };
 
-  const [results, total] = await Promise.all([
-    Staff.find(searchConditions).skip(skip).limit(limit),
-    Staff.countDocuments(searchConditions),
-  ]);
+  const results = await Staff.find(searchConditions);
 
   return res.status(200).json(
     new ApiResponce({
@@ -155,14 +135,7 @@ export const searchStaff = asyncHandler(async (req, res) => {
         results.length > 0
           ? "Staff search results fetched successfully."
           : "No matching staff found.",
-      data: {
-        staff: results,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: results,
     })
   );
 });

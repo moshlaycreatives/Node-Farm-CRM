@@ -25,14 +25,7 @@ export const addExpense = asyncHandler(async (req, res) => {
 // 2. Get All Expenses (Paginated)
 // ===========================================
 export const getAllExpenses = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const [expenses, total] = await Promise.all([
-    Expense.find({}).skip(skip).limit(limit),
-    Expense.countDocuments(),
-  ]);
+  const expenses = await Expense.find({});
 
   return res.status(200).json(
     new ApiResponce({
@@ -41,14 +34,7 @@ export const getAllExpenses = asyncHandler(async (req, res) => {
         expenses.length > 0
           ? "Expenses fetched successfully."
           : "No expense records found.",
-      data: {
-        expenses,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: expenses,
     })
   );
 });
@@ -125,9 +111,6 @@ export const deleteExpenseById = asyncHandler(async (req, res) => {
 // ===========================================
 export const searchExpenses = asyncHandler(async (req, res) => {
   const { query } = req.query;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
 
   if (!query || query.trim() === "") {
     return res.status(400).json(
@@ -149,10 +132,7 @@ export const searchExpenses = asyncHandler(async (req, res) => {
     ],
   };
 
-  const [results, total] = await Promise.all([
-    Expense.find(searchConditions).skip(skip).limit(limit),
-    Expense.countDocuments(searchConditions),
-  ]);
+  const results = await Expense.find(searchConditions);
 
   return res.status(200).json(
     new ApiResponce({
@@ -161,14 +141,7 @@ export const searchExpenses = asyncHandler(async (req, res) => {
         results.length > 0
           ? "Expenses search results fetched successfully."
           : "No matching expenses found.",
-      data: {
-        expenses: results,
-        pagination: {
-          totalItems: total,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page,
-        },
-      },
+      data: results,
     })
   );
 });

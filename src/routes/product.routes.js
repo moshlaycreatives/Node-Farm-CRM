@@ -1,9 +1,5 @@
 import { Router } from "express";
-import {
-  requiredFields,
-  trimBodyObject,
-  upload,
-} from "../middlewares/index.js";
+import { requiredFields, trimBodyObject } from "../middlewares/index.js";
 
 import {
   addProduct,
