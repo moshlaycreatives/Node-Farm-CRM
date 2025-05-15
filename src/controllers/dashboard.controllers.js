@@ -4,6 +4,7 @@ import { Salary } from "../models/salary.model.js";
 import { Expense } from "../models/expense.model.js";
 import { asyncHandler } from "../utils/asyncHandler.util.js";
 import { ApiResponce } from "../utils/apiResponce.util.js";
+import dayjs from "dayjs";
 
 // =============================================
 // 1. Counter Details
@@ -144,6 +145,72 @@ export const monthlyExpenses = asyncHandler(async (req, res) => {
           November: monthlyExpenses[10],
           December: monthlyExpenses[11],
         },
+      },
+    })
+  );
+});
+
+// ===========================================
+// 4. Earnings Controller (Just Sum of Prices)
+// ===========================================
+export const getEarnings = asyncHandler(async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json(
+      new ApiResponce({
+        statusCode: 400,
+        message:
+          "Query parameter is required (week, month, year, or specific year).",
+      })
+    );
+  }
+
+  let startDate, endDate;
+  const now = dayjs();
+
+  if (query.toLowerCase() === "week") {
+    startDate = now.startOf("week").toDate();
+    endDate = now.endOf("week").toDate();
+  } else if (query.toLowerCase() === "month") {
+    startDate = now.startOf("month").toDate();
+    endDate = now.endOf("month").toDate();
+  } else if (query.toLowerCase() === "year") {
+    startDate = now.startOf("year").toDate();
+    endDate = now.endOf("year").toDate();
+  } else if (/^\d{4}$/.test(query)) {
+    const year = parseInt(query);
+    startDate = dayjs(`${year}-01-01`).startOf("year").toDate();
+    endDate = dayjs(`${year}-12-31`).endOf("year").toDate();
+  } else {
+    return res.status(400).json(
+      new ApiResponce({
+        statusCode: 400,
+        message: "Invalid query parameter.",
+      })
+    );
+  }
+
+  const orders = await Order.find({
+    createdAt: { $gte: startDate, $lte: endDate },
+  });
+
+  let shyamalEarning = 0;
+  let patelEarning = 0;
+
+  for (const order of orders) {
+    shyamalEarning += order.shyamalStockPrice || 0;
+    patelEarning += order.patelStockPrice || 0;
+  }
+
+  return res.status(200).json(
+    new ApiResponce({
+      statusCode: 200,
+      message: "Earnings fetched successfully.",
+      data: {
+        query,
+        shyamalEarning,
+        patelEarning,
       },
     })
   );

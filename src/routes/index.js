@@ -7,6 +7,7 @@ import { salaryRouter } from "./salary.routes.js";
 import { customerRouter } from "./customer.routes.js";
 import { productRouter } from "./product.routes.js";
 import { orderRouter } from "./order.routes.js";
+import { dashboardRouter } from "./dashboard.routes.js";
 
 const router = Router();
 
@@ -44,5 +45,10 @@ router.use("/product", loginAuth, productRouter);
 // 7. Order Routes
 // ==============================================
 router.use("/order", loginAuth, orderRouter);
+
+// ==============================================
+// 8. Dashboard Routes
+// ==============================================
+router.use("/dashboard", loginAuth, dashboardRouter);
 
 export { router };
