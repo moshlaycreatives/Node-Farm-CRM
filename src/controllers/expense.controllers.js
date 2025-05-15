@@ -22,7 +22,7 @@ export const addExpense = asyncHandler(async (req, res) => {
 });
 
 // ===========================================
-// 2. Get All Expenses (Paginated)
+// 2. Get All Expenses
 // ===========================================
 export const getAllExpenses = asyncHandler(async (req, res) => {
   const expenses = await Expense.find({});

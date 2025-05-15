@@ -41,25 +41,21 @@ const productSchema = new Schema(
     shyamalStock: {
       type: Number,
       required: [true, "Shyamal stock is required."],
-      default: 0,
     },
 
     shyamalStockPrice: {
       type: Number,
       required: [true, "Shyamal stock price is required."],
-      default: 0,
     },
 
     patelStock: {
       type: Number,
       required: [true, "Patel stock is required."],
-      default: 0,
     },
 
     patelStockPrice: {
       type: Number,
       required: [true, "Patel stock price is required."],
-      default: 0,
     },
 
     date: {

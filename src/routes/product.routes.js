@@ -22,7 +22,7 @@ productRouter
     requiredFields([
       "productName",
       "shyamalStock",
-      "shymalStockPrice",
+      "shyamalStockPrice",
       "patelStock",
       "patelStockPrice",
       "date",
@@ -42,7 +42,7 @@ productRouter
     requiredFields([
       "productName",
       "shyamalStock",
-      "shymalStockPrice",
+      "shyamalStockPrice",
       "patelStock",
       "patelStockPrice",
       "date",

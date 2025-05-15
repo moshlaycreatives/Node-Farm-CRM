@@ -18,10 +18,29 @@ export const addSalary = asyncHandler(async (req, res) => {
 });
 
 // ===========================================
-// 2. Get All Salaries (Paginated)
+// 2. Get All Salaries with total per paidBy
 // ===========================================
 export const getAllSalaries = asyncHandler(async (req, res) => {
   const salaries = await Salary.find({});
+
+  const totalsByPaidBy = await Salary.aggregate([
+    { $match: { status: "Paid" } },
+    {
+      $group: {
+        _id: "$paidBy",
+        totalAmount: { $sum: "$salary" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        paidBy: "$_id",
+        totalAmount: 1,
+        count: 1,
+        _id: 0,
+      },
+    },
+  ]);
 
   return res.status(200).json(
     new ApiResponce({
@@ -30,7 +49,10 @@ export const getAllSalaries = asyncHandler(async (req, res) => {
         salaries.length > 0
           ? "Salary records fetched successfully."
           : "Salary collection is empty.",
-      data: salaries,
+      data: {
+        salaries,
+        totalsByPaidBy,
+      },
     })
   );
 });
@@ -99,7 +121,7 @@ export const deleteSalaryById = asyncHandler(async (req, res) => {
 });
 
 // ===========================================
-// 6. Search Salary Records (Paginated)
+// 6. Search Salary Records
 // ===========================================
 export const searchSalary = asyncHandler(async (req, res) => {
   const { query } = req.query;

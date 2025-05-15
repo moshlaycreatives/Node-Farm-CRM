@@ -67,8 +67,8 @@ const salarySchema = new Schema(
 
     status: {
       type: String,
-      enum: ["paid", "unpaid"],
-      required: true,
+      enum: ["Paid", "Unpaid"],
+      default: "Unpaid",
     },
   },
   { timestamps: true }

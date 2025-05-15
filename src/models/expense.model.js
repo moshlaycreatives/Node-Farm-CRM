@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
-
-// Expense counter schema
+// ==============================================
+// 1. Expense counter schema
+// ==============================================
 const expenseCounterSchema = new Schema(
   {
     name: {
@@ -18,7 +19,9 @@ const expenseCounterSchema = new Schema(
 
 const ExpenseCounter = model("ExpenseCounter", expenseCounterSchema);
 
-// Expense schema
+// ==============================================
+// 2. Expense schema
+// ==============================================
 const expenseSchema = new Schema(
   {
     expenseId: {
@@ -57,7 +60,9 @@ const expenseSchema = new Schema(
   { timestamps: true }
 );
 
-// Auto-increment expenseId
+// ==============================================
+// 3. Auto-increment expenseId
+// ==============================================
 expenseSchema.pre("validate", async function (next) {
   if (this.isNew) {
     try {

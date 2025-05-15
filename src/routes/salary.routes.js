@@ -26,7 +26,6 @@ salaryRouter
       "phone",
       "paidBy",
       "date",
-      "status",
     ]),
     addSalary
   )
@@ -47,7 +46,6 @@ salaryRouter
       "phone",
       "paidBy",
       "date",
-      "status",
     ]),
     updateSalaryById
   )
