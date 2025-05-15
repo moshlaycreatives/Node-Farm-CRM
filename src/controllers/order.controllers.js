@@ -80,25 +80,42 @@ export const getOrderById = asyncHandler(async (req, res) => {
 });
 
 // ===========================================
-// 4. Update Order By Id (Stock not adjusted)
+// 4. Update Order By Id (Stock adjusted properly)
 // ===========================================
 export const updateOrderById = asyncHandler(async (req, res) => {
-  const order = await Order.findOne({ _id: req.params.id });
+  const { id } = req.params;
+  const newData = req.body;
 
-  if (!order) {
+  const oldOrder = await Order.findById(id);
+  if (!oldOrder) {
     throw new NotFoundException("Order not found.");
   }
 
-  const updatedOrder = await Order.findOneAndUpdate(
-    { _id: req.params.id },
-    req.body,
-    { new: true }
-  );
+  const product = await Product.findById(oldOrder.productId);
+  if (!product) {
+    throw new NotFoundException("Product not found.");
+  }
+
+  product.shyamalStock += oldOrder.shyamalStock;
+  product.patelStock += oldOrder.patelStock;
+
+  product.shyamalStock -= newData.shyamalStock || 0;
+  product.patelStock -= newData.patelStock || 0;
+
+  if (product.shyamalStock < 0 || product.patelStock < 0) {
+    throw new BadRequestException("Not enough stock to update this order.");
+  }
+
+  await product.save();
+
+  const updatedOrder = await Order.findByIdAndUpdate(id, newData, {
+    new: true,
+  });
 
   return res.status(200).json(
     new ApiResponce({
       statusCode: 200,
-      message: "Order updated successfully.",
+      message: "Order updated and stock adjusted successfully.",
       data: updatedOrder,
     })
   );
