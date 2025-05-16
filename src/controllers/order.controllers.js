@@ -91,7 +91,7 @@ export const updateOrderById = asyncHandler(async (req, res) => {
     throw new NotFoundException("Order not found.");
   }
 
-  const product = await Product.findById(oldOrder.productId);
+  const product = await Product.findById(oldOrder.product);
   if (!product) {
     throw new NotFoundException("Product not found.");
   }
