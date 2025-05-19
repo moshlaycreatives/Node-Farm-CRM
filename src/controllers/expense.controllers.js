@@ -69,7 +69,7 @@ export const updateExpenseById = asyncHandler(async (req, res) => {
   }
 
   if (req?.file) {
-    req.body.image = req.file.path.replace(/\\/g, "/");
+    req.body.image = process.env.BASE_URL + req.file.path.replace(/\\/g, "/");
   }
 
   const updated = await Expense.findOneAndUpdate(
