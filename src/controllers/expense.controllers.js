@@ -112,27 +112,33 @@ export const deleteExpenseById = asyncHandler(async (req, res) => {
 export const searchExpenses = asyncHandler(async (req, res) => {
   const { query } = req.query;
 
-  if (!query || query.trim() === "") {
-    return res.status(400).json(
-      new ApiResponce({
-        statusCode: 400,
-        message: "Search query is required.",
-      })
-    );
+  let matchConditions = {};
+
+  if (query && query.trim() !== "") {
+    matchConditions = {
+      $or: [
+        { expenseIdStr: { $regex: query, $options: "i" } },
+        { paidBy: { $regex: query, $options: "i" } },
+        { expenseType: { $regex: query, $options: "i" } },
+      ],
+    };
   }
 
-  const searchRegex = new RegExp(query, "i");
-  const numericQuery = Number(query);
-
-  const searchConditions = {
-    $or: [
-      { expenseId: isNaN(numericQuery) ? null : numericQuery },
-      { paidBy: { $regex: searchRegex } },
-      { expenseType: { $regex: searchRegex } },
-    ],
-  };
-
-  const results = await Expense.find(searchConditions);
+  const results = await Expense.aggregate([
+    {
+      $addFields: {
+        expenseIdStr: { $toString: "$expenseId" },
+      },
+    },
+    {
+      $match: matchConditions,
+    },
+    {
+      $project: {
+        expenseIdStr: 0,
+      },
+    },
+  ]);
 
   return res.status(200).json(
     new ApiResponce({

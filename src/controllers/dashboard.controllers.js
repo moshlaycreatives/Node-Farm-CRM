@@ -17,16 +17,15 @@ export const counterDetails = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: null,
-        totalShyamalStock: { $sum: "$shyamalStock" },
-        totalPatelStock: { $sum: "$patelStock" },
+        totalSamStock: { $sum: "$samStock" },
+        totalJozayStock: { $sum: "$jozayStock" },
       },
     },
   ]);
 
   const totalStock =
     stockAggregation.length > 0
-      ? stockAggregation[0].totalShyamalStock +
-        stockAggregation[0].totalPatelStock
+      ? stockAggregation[0].totalSamStock + stockAggregation[0].totalJozayStock
       : 0;
 
   const totalStaff = await Staff.countDocuments();
@@ -70,23 +69,23 @@ export const totalExpense = asyncHandler(async (req, res) => {
     },
   ]);
 
-  let shyamalExpense = 0;
-  let patelExpense = 0;
+  let samExpense = 0;
+  let jozayExpense = 0;
 
   expenseAggregation.forEach((entry) => {
-    if (entry._id === "Shyamal") shyamalExpense = entry.totalAmount;
-    if (entry._id === "Patel") patelExpense = entry.totalAmount;
+    if (entry._id === "Sam") samExpense = entry.totalAmount;
+    if (entry._id === "Jozay") jozayExpense = entry.totalAmount;
   });
 
-  const totalExpenses = shyamalExpense + patelExpense;
+  const totalExpenses = samExpense + jozayExpense;
 
   return res.status(200).json(
     new ApiResponce({
       statusCode: 200,
       message: "Total expenses fetched successfully.",
       data: {
-        shyamalExpense,
-        patelExpense,
+        samExpense,
+        jozayExpense,
         totalExpenses,
       },
     })
@@ -154,114 +153,9 @@ export const monthlyExpenses = asyncHandler(async (req, res) => {
   );
 });
 
-// ===========================================
-// 4. Earnings Controller (Just Sum of Prices)
-// ===========================================
-// export const getEarnings = asyncHandler(async (req, res) => {
-//   const { query } = req.query;
-
-//   if (!query) {
-//     return res.status(400).json(
-//       new ApiResponce({
-//         statusCode: 400,
-//         message:
-//           "Query parameter is required (week, month, year, or specific year).",
-//       })
-//     );
-//   }
-
-//   let startDate, endDate;
-//   const now = dayjs();
-
-//   if (query.toLowerCase() === "week") {
-//     startDate = now.startOf("week").toDate();
-//     endDate = now.endOf("week").toDate();
-//   } else if (query.toLowerCase() === "month") {
-//     startDate = now.startOf("month").toDate();
-//     endDate = now.endOf("month").toDate();
-//   } else if (query.toLowerCase() === "year") {
-//     startDate = now.startOf("year").toDate();
-//     endDate = now.endOf("year").toDate();
-//   } else if (/^\d{4}$/.test(query)) {
-//     const year = parseInt(query);
-//     startDate = dayjs(`${year}-01-01`).startOf("year").toDate();
-//     endDate = dayjs(`${year}-12-31`).endOf("year").toDate();
-//   } else {
-//     return res.status(400).json(
-//       new ApiResponce({
-//         statusCode: 400,
-//         message: "Invalid query parameter.",
-//       })
-//     );
-//   }
-
-//   const orders = await Order.find({
-//     createdAt: { $gte: startDate, $lte: endDate },
-//   });
-
-//   let shyamalEarning = 0;
-//   let patelEarning = 0;
-
-//   for (const order of orders) {
-//     shyamalEarning += order.shyamalStockPrice || 0;
-//     patelEarning += order.patelStockPrice || 0;
-//   }
-
-//   let value;
-//   if (query === "month") {
-//     const monthNames = [
-//       "January",
-//       "February",
-//       "March",
-//       "April",
-//       "May",
-//       "June",
-//       "July",
-//       "August",
-//       "September",
-//       "October",
-//       "November",
-//       "December",
-//     ];
-
-//     value = monthNames[new Date().getMonth()];
-//   } else if (query === "year") {
-//     value = new Date().getFullYear();
-//   }
-
-//   return res.status(200).json(
-//     new ApiResponce({
-//       statusCode: 200,
-//       message: "Earnings fetched successfully.",
-//       data:
-//         query === "month"
-//           ? {
-//               [query]: value,
-//               shyamalEarning,
-//               patelEarning,
-//             }
-//           : query === "year"
-//           ? {
-//               [query]: value,
-//               shyamalEarning,
-//               patelEarning,
-//             }
-//           : query === "week"
-//           ? {
-//               query,
-//               shyamalEarning,
-//               patelEarning,
-//             }
-//           : {
-//               year: query,
-
-//               shyamalEarning,
-//               patelEarning,
-//             },
-//     })
-//   );
-// });
-
+// =============================================
+// 4. Get Eranings
+// =============================================
 export const getEarnings = asyncHandler(async (req, res) => {
   const { query } = req.query;
 
@@ -299,8 +193,8 @@ export const getEarnings = asyncHandler(async (req, res) => {
 
     const monthlyData = Array.from({ length: limitMonth }, (_, i) => ({
       month: monthNames[i],
-      shyamalEarning: 0,
-      patelEarning: 0,
+      samEarning: 0,
+      jozayEarning: 0,
     }));
 
     const startDate = dayjs(`${year}-01-01`).startOf("month").toDate();
@@ -315,17 +209,17 @@ export const getEarnings = asyncHandler(async (req, res) => {
     for (const order of orders) {
       const monthIndex = new Date(order.createdAt).getMonth();
       if (monthIndex < limitMonth) {
-        monthlyData[monthIndex].shyamalEarning += order.shyamalStockPrice || 0;
-        monthlyData[monthIndex].patelEarning += order.patelStockPrice || 0;
+        monthlyData[monthIndex].samEarning += order.samStockPrice || 0;
+        monthlyData[monthIndex].jozayEarning += order.jozayStockPrice || 0;
       }
     }
 
     // Add totalEarning to each month object
     const formattedData = monthlyData.map((item) => ({
       ...item,
-      shyamalEarning: +item.shyamalEarning.toFixed(2),
-      patelEarning: +item.patelEarning.toFixed(2),
-      totalEarning: +(item.shyamalEarning + item.patelEarning).toFixed(2),
+      samEarning: +item.samEarning.toFixed(2),
+      jozayEarning: +item.jozayEarning.toFixed(2),
+      totalEarning: +(item.samEarning + item.jozayEarning).toFixed(2),
     }));
 
     return res.status(200).json({
@@ -356,12 +250,12 @@ export const getEarnings = asyncHandler(async (req, res) => {
     createdAt: { $gte: startDate, $lte: endDate },
   });
 
-  let shyamalEarning = 0;
-  let patelEarning = 0;
+  let samEarning = 0;
+  let jozayEarning = 0;
 
   for (const order of orders) {
-    shyamalEarning += order.shyamalStockPrice || 0;
-    patelEarning += order.patelStockPrice || 0;
+    samEarning += order.samStockPrice || 0;
+    jozayEarning += order.jozayStockPrice || 0;
   }
 
   return res.status(200).json({
@@ -371,9 +265,9 @@ export const getEarnings = asyncHandler(async (req, res) => {
       {
         month:
           query.toLowerCase() === "month" ? now.format("MMMM") : "This Week",
-        shyamalEarning: +shyamalEarning.toFixed(2),
-        patelEarning: +patelEarning.toFixed(2),
-        totalEarning: +(shyamalEarning + patelEarning).toFixed(2),
+        samEarning: +samEarning.toFixed(2),
+        jozayEarning: +jozayEarning.toFixed(2),
+        totalEarning: +(samEarning + jozayEarning).toFixed(2),
       },
     ],
   });

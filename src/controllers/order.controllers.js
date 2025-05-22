@@ -7,7 +7,7 @@ import { NotFoundException, BadRequestException } from "../errors/index.js";
 // 1. Add Order (with stock update)
 // ===========================================
 export const addOrder = asyncHandler(async (req, res) => {
-  const { product, shyamalStock, patelStock, ...rest } = req.body;
+  const { product, samStock, jozayStock, ...rest } = req.body;
 
   const existingProduct = await Product.findById(product);
   if (!existingProduct) {
@@ -15,22 +15,22 @@ export const addOrder = asyncHandler(async (req, res) => {
   }
 
   if (
-    shyamalStock > existingProduct.shyamalStock ||
-    patelStock > existingProduct.patelStock
+    samStock > existingProduct.samStock ||
+    jozayStock > existingProduct.jozayStock
   ) {
     throw new BadRequestException(
       "Insufficient stock in the selected product."
     );
   }
 
-  existingProduct.shyamalStock -= shyamalStock;
-  existingProduct.patelStock -= patelStock;
+  existingProduct.samStock -= samStock;
+  existingProduct.jozayStock -= jozayStock;
   await existingProduct.save();
 
   const newOrder = await Order.create({
     product,
-    shyamalStock,
-    patelStock,
+    samStock,
+    jozayStock,
     ...rest,
   });
 
@@ -96,13 +96,13 @@ export const updateOrderById = asyncHandler(async (req, res) => {
     throw new NotFoundException("Product not found.");
   }
 
-  product.shyamalStock += oldOrder.shyamalStock;
-  product.patelStock += oldOrder.patelStock;
+  product.samStock += oldOrder.samStock;
+  product.jozayStock += oldOrder.jozayStock;
 
-  product.shyamalStock -= newData.shyamalStock || 0;
-  product.patelStock -= newData.patelStock || 0;
+  product.samStock -= newData.samStock || 0;
+  product.jozayStock -= newData.jozayStock || 0;
 
-  if (product.shyamalStock < 0 || product.patelStock < 0) {
+  if (product.samStock < 0 || product.jozayStock < 0) {
     throw new BadRequestException("Not enough stock to update this order.");
   }
 

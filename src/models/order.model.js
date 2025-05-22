@@ -61,25 +61,25 @@ const orderSchema = new Schema(
       default: 0,
     },
 
-    shyamalStock: {
+    samStock: {
       type: Number,
       trim: true,
       default: 0,
     },
 
-    shyamalStockPrice: {
+    samStockPrice: {
       type: Number,
       trim: true,
       default: 0,
     },
 
-    patelStock: {
+    jozayStock: {
       type: Number,
       trim: true,
       default: 0,
     },
 
-    patelStockPrice: {
+    jozayStockPrice: {
       type: Number,
       trim: true,
       default: 0,

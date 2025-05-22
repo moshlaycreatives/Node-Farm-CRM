@@ -38,24 +38,24 @@ const productSchema = new Schema(
       trim: true,
     },
 
-    shyamalStock: {
+    samStock: {
       type: Number,
-      required: [true, "Shyamal stock is required."],
+      required: [true, "Sam stock is required."],
     },
 
-    shyamalStockPrice: {
+    samStockPrice: {
       type: Number,
-      required: [true, "Shyamal stock price is required."],
+      required: [true, "Sam stock price is required."],
     },
 
-    patelStock: {
+    jozayStock: {
       type: Number,
-      required: [true, "Patel stock is required."],
+      required: [true, "Jozay stock is required."],
     },
 
-    patelStockPrice: {
+    jozayStockPrice: {
       type: Number,
-      required: [true, "Patel stock price is required."],
+      required: [true, "Jozay stock price is required."],
     },
 
     date: {

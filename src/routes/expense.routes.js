@@ -29,7 +29,12 @@ expenseRouter
   .get(getAllExpenses);
 
 // ========================================
-// 2. Get + Update + Delete - Expense
+// 2. Search Expense
+// ========================================
+expenseRouter.route("/search").get(searchExpenses);
+
+// ========================================
+// 3. Get + Update + Delete - Expense
 // ========================================
 expenseRouter
   .route("/:id")
@@ -41,10 +46,5 @@ expenseRouter
     updateExpenseById
   )
   .delete(deleteExpenseById);
-
-// ========================================
-// 3. Search Expense
-// ========================================
-expenseRouter.route("/search").get(searchExpenses);
 
 export { expenseRouter };

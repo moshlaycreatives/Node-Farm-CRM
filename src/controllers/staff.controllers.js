@@ -99,16 +99,18 @@ export const deleteStaffMemberById = asyncHandler(async (req, res) => {
 });
 
 // ===================================================
-// 6. Search Staff (case-insensitive, paginated)
+// 6. Search Staff (case-insensitive)
 // ===================================================
 export const searchStaff = asyncHandler(async (req, res) => {
   const { query } = req.query;
 
   if (!query || query.trim() === "") {
-    return res.status(400).json(
+    const allStaff = await Staff.find();
+    return res.status(200).json(
       new ApiResponce({
-        statusCode: 400,
-        message: "Search query is required.",
+        statusCode: 200,
+        message: "All staff data fetched successfully.",
+        data: allStaff,
       })
     );
   }

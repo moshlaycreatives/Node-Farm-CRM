@@ -6,7 +6,6 @@ import {
   deleteProductById,
   getAllProducts,
   getProductById,
-  searchProducts,
   updateProductById,
 } from "../controllers/product.controllers.js";
 
@@ -21,10 +20,10 @@ productRouter
     trimBodyObject,
     requiredFields([
       "productName",
-      "shyamalStock",
-      "shyamalStockPrice",
-      "patelStock",
-      "patelStockPrice",
+      "samStock",
+      "samStockPrice",
+      "jozayStock",
+      "jozayStockPrice",
       "date",
     ]),
     addProduct
@@ -41,19 +40,14 @@ productRouter
     trimBodyObject,
     requiredFields([
       "productName",
-      "shyamalStock",
-      "shyamalStockPrice",
-      "patelStock",
-      "patelStockPrice",
+      "samStock",
+      "samStockPrice",
+      "jozayStock",
+      "jozayStockPrice",
       "date",
     ]),
     updateProductById
   )
   .delete(deleteProductById);
-
-// ========================================
-// 3. Search Product
-// ========================================
-productRouter.route("/search").get(searchProducts);
 
 export { productRouter };
