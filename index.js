@@ -41,7 +41,7 @@ const PORT = process.env.PORT || 3000;
 (async () => {
   try {
     await connectDb();
-    server.listen(PORT, () => {
+    server.listen(PORT, "0.0.0.0", () => {
       if (process.env.NODE_ENV === "PRODUCTION") {
         console.log(`Server is running on port ${PORT}`);
       } else {
