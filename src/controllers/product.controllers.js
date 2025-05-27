@@ -18,10 +18,16 @@ export const addProduct = asyncHandler(async (req, res) => {
 });
 
 // ===========================================
-// 2. Get All Products (With Pagination)
+// 2. Get All Products
 // ===========================================
 export const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
+
+  const productsWithTotal = products.map((product) => {
+    const productObj = product.toObject();
+    productObj.totalStock = product.samStock + product.jozayStock;
+    return productObj;
+  });
 
   return res.status(200).json(
     new ApiResponce({
@@ -30,7 +36,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
         products.length > 0
           ? "Product collection fetched successfully."
           : "Product collection is empty.",
-      data: products,
+      data: productsWithTotal,
     })
   );
 });

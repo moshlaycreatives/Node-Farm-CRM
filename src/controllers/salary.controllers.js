@@ -168,9 +168,9 @@ export const searchSalary = asyncHandler(async (req, res) => {
 // ===========================================
 export const updateSalaryStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status } = req.query;
 
-  if (!["paid", "unpaid"].includes(status)) {
+  if (!["Paid", "Unpaid"].includes(status)) {
     return res.status(400).json(
       new ApiResponce({
         statusCode: 400,

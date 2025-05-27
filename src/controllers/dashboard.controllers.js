@@ -203,18 +203,17 @@ export const getEarnings = asyncHandler(async (req, res) => {
       : dayjs(`${year}-12-31`).endOf("month").toDate();
 
     const orders = await Order.find({
-      createdAt: { $gte: startDate, $lte: endDate },
+      date: { $gte: startDate, $lte: endDate },
     });
 
     for (const order of orders) {
-      const monthIndex = new Date(order.createdAt).getMonth();
+      const monthIndex = new Date(order.date).getMonth();
       if (monthIndex < limitMonth) {
         monthlyData[monthIndex].samEarning += order.samStockPrice || 0;
         monthlyData[monthIndex].jozayEarning += order.jozayStockPrice || 0;
       }
     }
 
-    // Add totalEarning to each month object
     const formattedData = monthlyData.map((item) => ({
       ...item,
       samEarning: +item.samEarning.toFixed(2),
@@ -247,7 +246,7 @@ export const getEarnings = asyncHandler(async (req, res) => {
   }
 
   const orders = await Order.find({
-    createdAt: { $gte: startDate, $lte: endDate },
+    date: { $gte: startDate, $lte: endDate },
   });
 
   let samEarning = 0;

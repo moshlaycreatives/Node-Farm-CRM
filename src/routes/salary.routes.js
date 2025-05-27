@@ -49,7 +49,7 @@ salaryRouter
     ]),
     updateSalaryById
   )
-  .patch(requiredFields(["status"]), updateSalaryStatus)
+  .patch(updateSalaryStatus)
   .delete(deleteSalaryById);
 
 // ========================================
