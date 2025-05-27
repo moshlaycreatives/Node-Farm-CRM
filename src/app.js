@@ -21,12 +21,8 @@ const app = express();
 // ============================================
 // 3. Middlewares
 // ============================================
-const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
-  flags: "a",
-});
 app.use(cors("*"));
 app.use(morgan("dev"));
-app.use(morgan("combined", { stream: logStream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
