@@ -34,18 +34,15 @@ const expenseSchema = new Schema(
     paidBy: {
       type: String,
       enum: ["Sam", "Jozay"],
-      required: [true, "PaidBy is required."],
     },
 
     expenseType: {
       type: String,
-      required: [true, "Expense type is required."],
       trim: true,
     },
 
     amount: {
       type: Number,
-      required: [true, "Amount is required."],
     },
 
     date: {

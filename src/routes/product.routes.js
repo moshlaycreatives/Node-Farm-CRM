@@ -14,21 +14,7 @@ const productRouter = Router();
 // ========================================
 // 1. Add + Get All - Product
 // ========================================
-productRouter
-  .route("/")
-  .post(
-    trimBodyObject,
-    requiredFields([
-      "productName",
-      "samStock",
-      "samStockPrice",
-      "jozayStock",
-      "jozayStockPrice",
-      "date",
-    ]),
-    addProduct
-  )
-  .get(getAllProducts);
+productRouter.route("/").post(addProduct).get(getAllProducts);
 
 // ========================================
 // 2. Get + Update + Delete - Product
@@ -36,18 +22,7 @@ productRouter
 productRouter
   .route("/:id")
   .get(getProductById)
-  .put(
-    trimBodyObject,
-    requiredFields([
-      "productName",
-      "samStock",
-      "samStockPrice",
-      "jozayStock",
-      "jozayStockPrice",
-      "date",
-    ]),
-    updateProductById
-  )
+  .put(updateProductById)
   .delete(deleteProductById);
 
 export { productRouter };

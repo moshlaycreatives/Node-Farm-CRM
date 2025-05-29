@@ -33,30 +33,25 @@ const salarySchema = new Schema(
 
     staffName: {
       type: String,
-      required: [true, "Staff name is required."],
       trim: true,
     },
 
     gender: {
       type: String,
-      enum: ["Male", "Female"],
-      required: true,
+      default: "",
     },
 
     salary: {
       type: Number,
-      required: [true, "Salary is required."],
     },
 
     phone: {
       type: String,
-      required: [true, "Phone number is required."],
       trim: true,
     },
 
     paidBy: {
       type: String,
-      required: [true, "PaidBy is required."],
       trim: true,
     },
 
@@ -68,7 +63,7 @@ const salarySchema = new Schema(
     status: {
       type: String,
       enum: ["Paid", "Unpaid"],
-      default: "Unpaid",
+      default: "Paid",
     },
   },
   { timestamps: true }

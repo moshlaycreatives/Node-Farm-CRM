@@ -19,14 +19,7 @@ salaryRouter
   .route("/")
   .post(
     trimBodyObject,
-    requiredFields([
-      "staffName",
-      "gender",
-      "salary",
-      "phone",
-      "paidBy",
-      "date",
-    ]),
+    requiredFields(["staffName", "salary", "phone", "paidBy", "date"]),
     addSalary
   )
   .get(getAllSalaries);
@@ -39,14 +32,7 @@ salaryRouter
   .get(getSalaryById)
   .put(
     trimBodyObject,
-    requiredFields([
-      "staffName",
-      "gender",
-      "salary",
-      "phone",
-      "paidBy",
-      "date",
-    ]),
+    requiredFields(["staffName", "salary", "phone", "paidBy", "date"]),
     updateSalaryById
   )
   .patch(updateSalaryStatus)

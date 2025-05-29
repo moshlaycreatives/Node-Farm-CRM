@@ -6,7 +6,22 @@ import { NotFoundException } from "../errors/index.js";
 // 1. Add Product
 // ===========================================
 export const addProduct = asyncHandler(async (req, res) => {
-  const newProduct = await Product.create(req.body);
+  const {
+    productName,
+    samStock,
+    samStockPrice,
+    jozayStock,
+    jozayStockPrice,
+    date,
+  } = req.body;
+  const newProduct = await Product.create({
+    productName: productName ?? "",
+    samStock: samStock ?? "",
+    samStockPrice: Number(samStockPrice) || 0,
+    jozayStock: jozayStock ?? "",
+    jozayStockPrice: Number(jozayStockPrice) || 0,
+    date: date ?? new Date(),
+  });
 
   return res.status(201).json(
     new ApiResponce({
@@ -23,9 +38,28 @@ export const addProduct = asyncHandler(async (req, res) => {
 export const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
 
+  const extractNumber = (str) => parseFloat(str);
+  const extractUnit = (str) => str.replace(/[0-9.]/g, "").trim();
+
   const productsWithTotal = products.map((product) => {
     const productObj = product.toObject();
-    productObj.totalStock = product.samStock + product.jozayStock;
+
+    const samNum = extractNumber(product.samStock);
+    const samUnit = extractUnit(product.samStock);
+
+    const jozayNum = extractNumber(product.jozayStock);
+    const jozayUnit = extractUnit(product.jozayStock);
+
+    let totalStock;
+
+    if (samUnit === jozayUnit) {
+      totalStock = `${samNum + jozayNum}${samUnit}`;
+    } else {
+      totalStock = `${samNum}${samUnit} + ${jozayNum}${jozayUnit}`;
+    }
+
+    productObj.totalStock = totalStock;
+
     return productObj;
   });
 

@@ -35,25 +35,21 @@ const staffSchema = new Schema(
 
     fullName: {
       type: String,
-      required: [true, "Name is required."],
       trim: true,
     },
 
     gender: {
       type: String,
       enum: ["Male", "Fxemale"],
-      required: true,
     },
 
     role: {
       type: String,
-      required: [true, "Role is required."],
       trim: true,
     },
 
     phone: {
       type: String,
-      required: [true, "Role is required."],
       trim: true,
     },
   },

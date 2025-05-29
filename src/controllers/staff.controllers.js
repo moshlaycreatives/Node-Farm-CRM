@@ -6,7 +6,12 @@ import { NotFoundException } from "../errors/index.js";
 // 1. Add Staff
 // ===========================================
 export const addStaff = asyncHandler(async (req, res) => {
-  const newEntry = await Staff.create(req.body);
+  const newEntry = await Staff.create({
+    fullName: req.body.fullName,
+    gender: req.body.gender,
+    role: req.body.role,
+    phone: req.body.phone,
+  });
 
   return res.status(201).json(
     new ApiResponce({

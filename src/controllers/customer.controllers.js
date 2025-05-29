@@ -1,12 +1,25 @@
 import { Customer } from "../models/customer.model.js";
 import { asyncHandler, ApiResponce } from "../utils/index.js";
-import { NotFoundException } from "../errors/index.js";
+import { BadRequestException, NotFoundException } from "../errors/index.js";
 
 // ===========================================
 // 1. Add Customer
 // ===========================================
 export const addCustomer = asyncHandler(async (req, res) => {
-  const newEntry = await Customer.create(req.body);
+  const { companyName, clientName, phone, state, city, zipCode } = req.body;
+
+  if (!(phone && phone.length >= 8 && phone.length <= 15)) {
+    throw new BadRequestException("Invalid phone number lenght.");
+  }
+
+  const newEntry = await Customer.create({
+    companyName: companyName ?? "",
+    clientName: clientName ?? "",
+    phone: phone ?? "",
+    state: state ?? "",
+    city: city ?? "",
+    zipCode: zipCode ?? "",
+  });
 
   return res.status(201).json(
     new ApiResponce({

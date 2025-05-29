@@ -10,7 +10,13 @@ export const addExpense = asyncHandler(async (req, res) => {
     req.body.image = process.env.BASE_URL + req.file.path.replace(/\\/g, "/");
   }
 
-  const newExpense = await Expense.create(req.body);
+  const newExpense = await Expense.create({
+    paidBy: req.body.paidBy,
+    expenseType: req.body.expenseType,
+    amount: req.body.amount,
+    date: req.body.date,
+    image: req.body?.image ? req.body.image : "",
+  });
 
   return res.status(201).json(
     new ApiResponce({

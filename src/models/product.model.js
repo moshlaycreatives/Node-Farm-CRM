@@ -34,28 +34,30 @@ const productSchema = new Schema(
 
     productName: {
       type: String,
-      required: [true, "Product name is required."],
       trim: true,
+      default: "",
     },
 
     samStock: {
-      type: Number,
-      required: [true, "Sam stock is required."],
+      type: String,
+      trim: true,
+      default: "",
     },
 
     samStockPrice: {
       type: Number,
-      required: [true, "Sam stock price is required."],
+      default: 0,
     },
 
     jozayStock: {
-      type: Number,
-      required: [true, "Jozay stock is required."],
+      type: String,
+      trim: true,
+      default: "",
     },
 
     jozayStockPrice: {
       type: Number,
-      required: [true, "Jozay stock price is required."],
+      default: 0,
     },
 
     date: {

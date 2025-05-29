@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { requiredFields, trimBodyObject } from "../middlewares/index.js";
 
 import {
   addCustomer,
@@ -15,21 +14,7 @@ const customerRouter = Router();
 // ========================================
 // 1. Add + Get All - Customers
 // ========================================
-customerRouter
-  .route("/")
-  .post(
-    trimBodyObject,
-    requiredFields([
-      "companyName",
-      "clientName",
-      "phone",
-      "state",
-      "city",
-      "zipCode",
-    ]),
-    addCustomer
-  )
-  .get(getAllCustomers);
+customerRouter.route("/").post(addCustomer).get(getAllCustomers);
 
 // ========================================
 // 2. Get + Update + Delete - Customer
@@ -37,18 +22,7 @@ customerRouter
 customerRouter
   .route("/:id")
   .get(getCustomerById)
-  .put(
-    trimBodyObject,
-    requiredFields([
-      "companyName",
-      "clientName",
-      "phone",
-      "state",
-      "city",
-      "zipCode",
-    ]),
-    updateCustomerById
-  )
+  .put(updateCustomerById)
   .delete(deleteCustomerById);
 
 // ========================================

@@ -34,38 +34,38 @@ const customerSchema = new Schema(
 
     companyName: {
       type: String,
-      required: [true, "Company name is required."],
       trim: true,
+      default: "",
     },
 
     clientName: {
       type: String,
-      required: [true, "Client name is required."],
       trim: true,
+      default: "",
     },
 
     phone: {
       type: String,
-      required: [true, "Phone number is required."],
       trim: true,
+      default: "",
     },
 
     state: {
       type: String,
-      required: [true, "State is required."],
       trim: true,
+      default: "",
     },
 
     city: {
       type: String,
-      required: [true, "City is required."],
       trim: true,
+      default: "",
     },
 
     zipCode: {
       type: String,
-      required: [true, "Zip code is required."],
       trim: true,
+      default: "",
     },
   },
   { timestamps: true }
