@@ -11,8 +11,75 @@ import { Order } from "../models/order.model.js";
 // 1. Counter Details
 // =============================================
 export const counterDetails = asyncHandler(async (req, res) => {
-  const totalPreroles = await Product.countDocuments({ category: "PREROLE" });
-  const totalFlowers = await Product.countDocuments({ category: "FLOWER" });
+  const totalPrerolesAgg = await Product.aggregate([
+    { $match: { category: "PREROLE" } },
+    {
+      $addFields: {
+        numericSamStock: {
+          $toDouble: {
+            $arrayElemAt: [
+              { $regexFind: { input: "$samStock", regex: /\d+(\.\d+)?/ } },
+              "match",
+            ],
+          },
+        },
+        numericJoseStock: {
+          $toDouble: {
+            $arrayElemAt: [
+              { $regexFind: { input: "$joseStock", regex: /\d+(\.\d+)?/ } },
+              "match",
+            ],
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalSamStock: { $sum: "$numericSamStock" },
+        totalJoseStock: { $sum: "$numericJoseStock" },
+      },
+    },
+  ]);
+
+  const totalFlowersAgg = await Product.aggregate([
+    { $match: { category: "FLOWER" } },
+    {
+      $addFields: {
+        numericSamStock: {
+          $toDouble: {
+            $arrayElemAt: [
+              { $regexFind: { input: "$samStock", regex: /\d+(\.\d+)?/ } },
+              "match",
+            ],
+          },
+        },
+        numericJoseStock: {
+          $toDouble: {
+            $arrayElemAt: [
+              { $regexFind: { input: "$joseStock", regex: /\d+(\.\d+)?/ } },
+              "match",
+            ],
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalSamStock: { $sum: "$numericSamStock" },
+        totalJoseStock: { $sum: "$numericJoseStock" },
+      },
+    },
+  ]);
+
+  const totalPreroles = totalPrerolesAgg.length
+    ? totalPrerolesAgg[0].totalSamStock + totalPrerolesAgg[0].totalJoseStock
+    : 0;
+
+  const totalFlowers = totalFlowersAgg.length
+    ? totalFlowersAgg[0].totalSamStock + totalFlowersAgg[0].totalJoseStock
+    : 0;
 
   const totalStaff = await Staff.countDocuments();
 
