@@ -49,15 +49,21 @@ const productSchema = new Schema(
       default: 0,
     },
 
-    jozayStock: {
+    joseStock: {
       type: String,
       trim: true,
       default: "",
     },
 
-    jozayStockPrice: {
+    joseStockPrice: {
       type: Number,
       default: 0,
+    },
+
+    category: {
+      type: String,
+      enum: ["", "FLOWER", "PREROLE"],
+      default: "",
     },
 
     date: {
@@ -65,7 +71,7 @@ const productSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 // ===================================================

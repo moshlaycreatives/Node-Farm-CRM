@@ -7,7 +7,7 @@ import { NotFoundException, BadRequestException } from "../errors/index.js";
 // 1. Add Order (with stock update)
 // ===========================================
 export const addOrder = asyncHandler(async (req, res) => {
-  const { product, samStock, jozayStock, ...rest } = req.body;
+  const { product, samStock, joseStock, ...rest } = req.body;
 
   const existingProduct = await Product.findById(product);
   if (!existingProduct) {
@@ -18,28 +18,28 @@ export const addOrder = asyncHandler(async (req, res) => {
   const extractUnit = (str) => str.replace(/[0-9.]/g, "").trim(); // e.g. "1200lb" => "lb"
 
   const existingSamStockNum = extractNumber(existingProduct.samStock);
-  const existingJozayStockNum = extractNumber(existingProduct.jozayStock);
+  const existingJoseStockNum = extractNumber(existingProduct.joseStock);
 
-  if (samStock > existingSamStockNum || jozayStock > existingJozayStockNum) {
+  if (samStock > existingSamStockNum || joseStock > existingJoseStockNum) {
     throw new BadRequestException(
       "Insufficient stock in the selected product."
     );
   }
 
   const samUnit = extractUnit(existingProduct.samStock);
-  const jozayUnit = extractUnit(existingProduct.jozayStock);
+  const joseUnit = extractUnit(existingProduct.joseStock);
 
   const newSamStock = `${existingSamStockNum - samStock}${samUnit}`;
-  const newJozayStock = `${existingJozayStockNum - jozayStock}${jozayUnit}`;
+  const newJoseStock = `${existingJoseStockNum - joseStock}${joseUnit}`;
 
   existingProduct.samStock = newSamStock;
-  existingProduct.jozayStock = newJozayStock;
+  existingProduct.joseStock = newJoseStock;
   await existingProduct.save();
 
   const newOrder = await Order.create({
     product,
     samStock,
-    jozayStock,
+    joseStock,
     ...rest,
   });
 
@@ -109,27 +109,27 @@ export const updateOrderById = asyncHandler(async (req, res) => {
   const extractUnit = (str) => str.replace(/[0-9.]/g, "").trim();
 
   const currentSamStock = extractNumber(product.samStock);
-  const currentJozayStock = extractNumber(product.jozayStock);
+  const currentJoseStock = extractNumber(product.joseStock);
   const samUnit = extractUnit(product.samStock);
-  const jozayUnit = extractUnit(product.jozayStock);
+  const joseUnit = extractUnit(product.joseStock);
 
   // Revert old order stock
   let updatedSamStock = currentSamStock + oldOrder.samStock;
-  let updatedJozayStock = currentJozayStock + oldOrder.jozayStock;
+  let updatedJoseStock = currentJoseStock + oldOrder.joseStock;
 
   // Subtract new values if provided
   const newSamStockVal = newData.samStock ?? oldOrder.samStock;
-  const newJozayStockVal = newData.jozayStock ?? oldOrder.jozayStock;
+  const newJoseStockVal = newData.joseStock ?? oldOrder.joseStock;
 
   updatedSamStock -= newSamStockVal;
-  updatedJozayStock -= newJozayStockVal;
+  updatedJoseStock -= newJoseStockVal;
 
-  if (updatedSamStock < 0 || updatedJozayStock < 0) {
+  if (updatedSamStock < 0 || updatedJoseStock < 0) {
     throw new BadRequestException("Not enough stock to update this order.");
   }
 
   product.samStock = `${updatedSamStock}${samUnit}`;
-  product.jozayStock = `${updatedJozayStock}${jozayUnit}`;
+  product.joseStock = `${updatedJoseStock}${joseUnit}`;
   await product.save();
 
   const updatedOrder = await Order.findByIdAndUpdate(id, newData, {

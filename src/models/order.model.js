@@ -73,13 +73,13 @@ const orderSchema = new Schema(
       default: 0,
     },
 
-    jozayStock: {
+    joseStock: {
       type: Number,
       trim: true,
       default: 0,
     },
 
-    jozayStockPrice: {
+    joseStockPrice: {
       type: Number,
       trim: true,
       default: 0,

@@ -1,6 +1,6 @@
 import { Expense } from "../models/expense.model.js";
 import { asyncHandler, ApiResponce } from "../utils/index.js";
-import { NotFoundException, BadRequestException } from "../errors/index.js";
+import { NotFoundException } from "../errors/index.js";
 
 // ===========================================
 // 1. Add Expense

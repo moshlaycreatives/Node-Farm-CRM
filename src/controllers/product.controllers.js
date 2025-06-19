@@ -10,17 +10,19 @@ export const addProduct = asyncHandler(async (req, res) => {
     productName,
     samStock,
     samStockPrice,
-    jozayStock,
-    jozayStockPrice,
+    joseStock,
+    joseStockPrice,
     date,
+    category,
   } = req.body;
   const newProduct = await Product.create({
     productName: productName ?? "",
     samStock: samStock ?? "",
     samStockPrice: Number(samStockPrice) || 0,
-    jozayStock: jozayStock ?? "",
-    jozayStockPrice: Number(jozayStockPrice) || 0,
+    joseStock: joseStock ?? "",
+    joseStockPrice: Number(joseStockPrice) || 0,
     date: date ?? new Date(),
+    category: category ?? "",
   });
 
   return res.status(201).json(
@@ -47,15 +49,15 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     const samNum = extractNumber(product.samStock);
     const samUnit = extractUnit(product.samStock);
 
-    const jozayNum = extractNumber(product.jozayStock);
-    const jozayUnit = extractUnit(product.jozayStock);
+    const joseNum = extractNumber(product.joseStock);
+    const joseUnit = extractUnit(product.joseStock);
 
     let totalStock;
 
-    if (samUnit === jozayUnit) {
-      totalStock = `${samNum + jozayNum}${samUnit}`;
+    if (samUnit === joseUnit) {
+      totalStock = `${samNum + joseNum}${samUnit}`;
     } else {
-      totalStock = `${samNum}${samUnit} + ${jozayNum}${jozayUnit}`;
+      totalStock = `${samNum}${samUnit} + ${joseNum}${joseUnit}`;
     }
 
     productObj.totalStock = totalStock;

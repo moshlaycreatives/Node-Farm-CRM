@@ -33,7 +33,7 @@ const expenseSchema = new Schema(
 
     paidBy: {
       type: String,
-      enum: ["Sam", "Jozay"],
+      enum: ["Sam", "Jose"],
     },
 
     expenseType: {
