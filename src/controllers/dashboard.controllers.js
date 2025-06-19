@@ -10,9 +10,6 @@ import { Order } from "../models/order.model.js";
 // =============================================
 // 1. Counter Details
 // =============================================
-// =============================================
-// 1. Counter Details
-// =============================================
 export const counterDetails = asyncHandler(async (req, res) => {
   const getStockSumByCategory = async (category) => {
     const result = await Product.aggregate([
