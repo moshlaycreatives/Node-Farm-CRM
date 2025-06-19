@@ -10,76 +10,69 @@ import { Order } from "../models/order.model.js";
 // =============================================
 // 1. Counter Details
 // =============================================
+// =============================================
+// 1. Counter Details
+// =============================================
 export const counterDetails = asyncHandler(async (req, res) => {
-  const totalPrerolesAgg = await Product.aggregate([
-    { $match: { category: "PREROLE" } },
-    {
-      $addFields: {
-        numericSamStock: {
-          $toDouble: {
-            $arrayElemAt: [
-              { $regexFind: { input: "$samStock", regex: /\d+(\.\d+)?/ } },
-              "match",
-            ],
+  const getStockSumByCategory = async (category) => {
+    const result = await Product.aggregate([
+      { $match: { category } },
+      {
+        $addFields: {
+          numericSamStock: {
+            $toDouble: {
+              $ifNull: [
+                {
+                  $getField: {
+                    field: "match",
+                    input: {
+                      $regexFind: {
+                        input: "$samStock",
+                        regex: /\d+(\.\d+)?/,
+                      },
+                    },
+                  },
+                },
+                "0",
+              ],
+            },
           },
-        },
-        numericJoseStock: {
-          $toDouble: {
-            $arrayElemAt: [
-              { $regexFind: { input: "$joseStock", regex: /\d+(\.\d+)?/ } },
-              "match",
-            ],
+          numericJoseStock: {
+            $toDouble: {
+              $ifNull: [
+                {
+                  $getField: {
+                    field: "match",
+                    input: {
+                      $regexFind: {
+                        input: "$joseStock",
+                        regex: /\d+(\.\d+)?/,
+                      },
+                    },
+                  },
+                },
+                "0",
+              ],
+            },
           },
         },
       },
-    },
-    {
-      $group: {
-        _id: null,
-        totalSamStock: { $sum: "$numericSamStock" },
-        totalJoseStock: { $sum: "$numericJoseStock" },
+      {
+        $group: {
+          _id: null,
+          totalSamStock: { $sum: "$numericSamStock" },
+          totalJoseStock: { $sum: "$numericJoseStock" },
+        },
       },
-    },
-  ]);
+    ]);
 
-  const totalFlowersAgg = await Product.aggregate([
-    { $match: { category: "FLOWER" } },
-    {
-      $addFields: {
-        numericSamStock: {
-          $toDouble: {
-            $arrayElemAt: [
-              { $regexFind: { input: "$samStock", regex: /\d+(\.\d+)?/ } },
-              "match",
-            ],
-          },
-        },
-        numericJoseStock: {
-          $toDouble: {
-            $arrayElemAt: [
-              { $regexFind: { input: "$joseStock", regex: /\d+(\.\d+)?/ } },
-              "match",
-            ],
-          },
-        },
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        totalSamStock: { $sum: "$numericSamStock" },
-        totalJoseStock: { $sum: "$numericJoseStock" },
-      },
-    },
-  ]);
+    return result.length
+      ? result[0].totalSamStock + result[0].totalJoseStock
+      : 0;
+  };
 
-  const totalPreroles = totalPrerolesAgg.length
-    ? totalPrerolesAgg[0].totalSamStock + totalPrerolesAgg[0].totalJoseStock
-    : 0;
-
-  const totalFlowers = totalFlowersAgg.length
-    ? totalFlowersAgg[0].totalSamStock + totalFlowersAgg[0].totalJoseStock
-    : 0;
+  const totalPreroles = await getStockSumByCategory("PREROLE");
+  const totalFlowers = await getStockSumByCategory("FLOWER");
 
   const totalStaff = await Staff.countDocuments();
 
