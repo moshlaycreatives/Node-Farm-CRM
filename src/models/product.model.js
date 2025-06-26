@@ -92,6 +92,7 @@ productSchema.pre("validate", async function (next) {
       );
 
       this.productId = updatedCounter.counter;
+      next();
     } catch (error) {
       return next(error);
     }
