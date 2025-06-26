@@ -11,6 +11,11 @@ import {
 const productRouter = Router();
 
 // ========================================
+// 1. Add + Get All - Product
+// ========================================
+productRouter.route("/").post(addProduct).get(getAllProducts);
+
+// ========================================
 // 2. Get + Update + Delete - Product
 // ========================================
 productRouter
@@ -18,10 +23,4 @@ productRouter
   .get(getProductById)
   .put(updateProductById)
   .delete(deleteProductById);
-
-// ========================================
-// 1. Add + Get All - Product
-// ========================================
-productRouter.route("/").post(addProduct).get(getAllProducts);
-
 export { productRouter };
